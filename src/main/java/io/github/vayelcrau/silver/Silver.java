@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  * A simple web server that can serve HTML files that contain Javascript and other forms of non-code executing code.
@@ -19,17 +20,12 @@ public class Silver {
     System.out.println("Listening for connection on port " + port + "...");
 
     while(true) {
-      Socket client = server.accept();
-      BufferedReader reader = new BufferedReader(
-        new InputStreamReader(client.getInputStream())
-      );
+      try (Socket socket = server.accept()) {
+        Date date = new Date();
+        String response = "HTTP/1.1 200 OK\r\n\r\n" + date;
 
-      String line;
-
-      do {
-        line = reader.readLine();
-        System.out.println(line);
-      } while (!line.isEmpty());
+        socket.getOutputStream().write(response.getBytes("UTF-8"));
+      }
     }
   }
 }
