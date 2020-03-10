@@ -20,12 +20,8 @@ public class Silver {
     System.out.println("Listening for connection on port " + port + "...");
 
     while(true) {
-      try (Socket socket = server.accept()) {
-        Date date = new Date();
-        String response = "HTTP/1.1 200 OK\r\n\r\n" + date;
-
-        socket.getOutputStream().write(response.getBytes("UTF-8"));
-      }
+      Socket socket = server.accept();
+      new Thread(SocketManager.fromSocket(socket)).start();
     }
   }
 }
